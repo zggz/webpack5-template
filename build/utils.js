@@ -1,17 +1,20 @@
 'use strict'
-const path = require('path')
-const config = require('../config')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const packageConfig = require('../package.json')
+import path from 'path'
+import config from '../config/index.js'
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
+import notifier from 'node-notifier'
+import { promises as fs } from 'node:fs';
 
-exports.assetsPath = function (_path) {
+const packageConfig = JSON.parse(await fs.readFile('package.json'));
+
+export const assetsPath = function (_path) {
   const assetsSubDirectory = process.env.NODE_ENV === 'production'
     ? config.build.assetsSubDirectory
     : config.dev.assetsSubDirectory
   return path.posix.join(assetsSubDirectory, _path)
 }
 
-exports.cssLoaders = function (options) {
+export const cssLoaders = function (options) {
   options = options || {}
 
   const cssLoader = {
@@ -23,11 +26,11 @@ exports.cssLoaders = function (options) {
 
   const postcssLoader = {
     loader: 'postcss-loader',
-    options: {
-      sourceMap: options.sourceMap
-    }
+    // options: {
+    //   sourceMap: options.sourceMap
+    // }
   }
-  
+
 
   // generate loader string to be used with extract text plugin
   function generateLoaders(loader, loaderOptions) {
@@ -37,11 +40,11 @@ exports.cssLoaders = function (options) {
         esModule: false,
       },
     }
-    const loaders = [miniCssLoader,cssLoader]
+    const loaders = [miniCssLoader, cssLoader]
     if (options.usePostCSS) {
       loaders.push(postcssLoader)
     }
-    
+
     if (loader) {
       loaders.push({
         loader: loader + '-loader',
@@ -59,7 +62,7 @@ exports.cssLoaders = function (options) {
     //     fallback: 'vue-style-loader'
     //   })
     // } else {
-     
+
     // }
     return ['vue-style-loader'].concat(loaders)
   }
@@ -77,9 +80,9 @@ exports.cssLoaders = function (options) {
 }
 
 // Generate loaders for standalone style files (outside of .vue)
-exports.styleLoaders = function (options) {
+export const styleLoaders = function (options) {
   const output = []
-  const loaders = exports.cssLoaders(options)
+  const loaders = cssLoaders(options)
 
   for (const extension in loaders) {
     const loader = loaders[extension]
@@ -91,8 +94,8 @@ exports.styleLoaders = function (options) {
   return output
 }
 
-exports.createNotifierCallback = () => {
-  const notifier = require('node-notifier')
+export const createNotifierCallback = () => {
+
 
   return (severity, errors) => {
     if (severity !== 'error') return

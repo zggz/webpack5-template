@@ -1,21 +1,25 @@
 'use strict'
-const path = require('path')
-const utils = require('./utils')
-const webpack = require('webpack')
-const config = require('../config')
-const { merge } = require('webpack-merge')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const { VueLoaderPlugin } = require('vue-loader')
+import path from 'path'
+import * as  utils from './utils.js'
+import webpack from 'webpack'
+import config from '../config/index.js'
+import { merge } from 'webpack-merge'
+import baseWebpackConfig from './webpack.base.conf.js'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin"
+import TerserPlugin from "terser-webpack-plugin"
+import { VueLoaderPlugin } from 'vue-loader'
+import WebpackBundleAnalyzer from 'webpack-bundle-analyzer'
+import CompressionWebpackPlugin from 'compression-webpack-plugin'
+import { fileURLToPath } from 'node:url';
 
 
-const env = process.env.NODE_ENV === 'testing'
-  ? require('../config/test.env')
-  : require('../config/prod.env')
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const importFresh = async modulePath => import(`${modulePath}?x=${new Date()}`);
+const env = (await importFresh(process.env.NODE_ENV === 'testing' ? '../config/test.env' : '../config/prod.env.js' )).default;
 
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
@@ -150,11 +154,10 @@ const webpackConfig = merge(baseWebpackConfig, {
 })
 
 if (config.build.productionGzip) {
-  const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
   webpackConfig.plugins.push(
     new CompressionWebpackPlugin({
-      asset: '[path].gz[query]',
+      // asset: '[path].gz[query]',
       algorithm: 'gzip',
       test: new RegExp(
         '\\.(' +
@@ -162,13 +165,14 @@ if (config.build.productionGzip) {
         ')$'
       ),
       threshold: 10240,
-      minRatio: 0.8
+      minRatio: 0.8,
+      deleteOriginalAssets: true,
     })
   )
 }
 if (config.build.bundleAnalyzerReport) {
-  const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  const BundleAnalyzerPlugin = WebpackBundleAnalyzer.BundleAnalyzerPlugin
   webpackConfig.plugins.push(new BundleAnalyzerPlugin())
 }
 
-module.exports = webpackConfig
+export default webpackConfig

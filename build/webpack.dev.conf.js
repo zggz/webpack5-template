@@ -1,17 +1,23 @@
 'use strict'
-const utils = require('./utils')
-const webpack = require('webpack')
-const config = require('../config')
-const { merge } = require('webpack-merge')
-const path = require('path')
-const baseWebpackConfig = require('./webpack.base.conf')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const ESLintPlugin = require('eslint-webpack-plugin');
-const portfinder = require('portfinder')
-const { VueLoaderPlugin } = require('vue-loader')
+import * as utils from './utils.js'
+import webpack from 'webpack'
+import config from '../config/index.js'
+import { merge } from 'webpack-merge'
+import path from 'path'
+import baseWebpackConfig from './webpack.base.conf.js'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
+import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
+import ESLintPlugin from 'eslint-webpack-plugin'
+import portfinder from 'portfinder'
+import { VueLoaderPlugin } from 'vue-loader'
+import devConfigEnv from '../config/dev.env.js'
+
+import { fileURLToPath } from 'node:url';
+
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -29,13 +35,13 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     client: {
       logging: 'info',
       overlay: config.dev.errorOverlay
-      ? { warnings: false, errors: true }
+        ? { warnings: false, errors: true }
         : false,
       progress: true,
     },
     compress: true,
     allowedHosts: config.dev.allowedHosts.length > 1 ? config.dev.allowedHosts : 'all',
-     historyApiFallback: {
+    historyApiFallback: {
       rewrites: [
         { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
       ],
@@ -49,7 +55,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   plugins: [
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
-      'process.env': require('../config/dev.env')
+      'process.env': devConfigEnv
     }),
     new webpack.HotModuleReplacementPlugin(),
     // HMR shows correct file names in console on update.
@@ -61,7 +67,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       inject: true
     }),
     new MiniCssExtractPlugin({ filename: utils.assetsPath('css/[name].[contenthash].css') }),
-     
+
     // copy custom static assets
     new CopyWebpackPlugin({
       patterns: [
@@ -77,7 +83,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   ]
 })
 
-module.exports = new Promise((resolve, reject) => {
+export default new Promise((resolve, reject) => {
   portfinder.basePort = process.env.PORT || config.dev.port
   portfinder.getPort((err, port) => {
     if (err) {

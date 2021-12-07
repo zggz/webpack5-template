@@ -1,11 +1,15 @@
 'use strict'
-const path = require('path')
-const chalk = require('chalk')
-const utils = require('./utils')
-const config = require('../config')
-const vueLoaderConfig = require('./vue-loader.conf')
-const ProgressBarPlugin = require('progress-bar-webpack-plugin')
+import path from 'node:path';
 
+import chalk from 'chalk'
+import * as utils from './utils.js'
+import config from '../config/index.js'
+import vueLoaderConfig from './vue-loader.conf.js'
+import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import { fileURLToPath } from 'node:url';
+
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -21,7 +25,7 @@ function resolve(dir) {
 //   }
 // })
 
-module.exports = {
+export default {
   context: path.resolve(__dirname, '../'),
   entry: {
     app: './src/main.js'
@@ -34,7 +38,7 @@ module.exports = {
       : config.dev.assetsPublicPath
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+     extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json'] ,
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
