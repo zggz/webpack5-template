@@ -105,7 +105,13 @@ export default new Promise((resolve, reject) => {
       // }))
       if (config.dev.useEslint) {
         devWebpackConfig.plugins.push(
-          new ESLintPlugin()
+          new ESLintPlugin({
+            fix: true, // 启用ESLint自动修复功能
+            extensions: ['js', 'jsx'],
+            context: path.resolve(__dirname, '../src'), // 文件根目录
+            exclude: '/node_modules/',// 指定要排除的文件/目录
+            cache: true //缓存
+          })
         )
       }
       resolve(devWebpackConfig)
