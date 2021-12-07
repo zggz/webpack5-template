@@ -1,8 +1,10 @@
 'use strict'
 const path = require('path')
+const chalk = require('chalk')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -89,6 +91,11 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new ProgressBarPlugin({
+      format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
+    })
+  ],
   node: {
     // prevent webpack from injecting mocks to Node native modules
     // that does not make sense for the client
