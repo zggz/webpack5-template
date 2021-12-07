@@ -10,7 +10,6 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin"
 import TerserPlugin from "terser-webpack-plugin"
-import { VueLoaderPlugin } from 'vue-loader'
 import WebpackBundleAnalyzer from 'webpack-bundle-analyzer'
 import CompressionWebpackPlugin from 'compression-webpack-plugin'
 import { fileURLToPath } from 'node:url';
@@ -61,7 +60,6 @@ const webpackConfig = merge(baseWebpackConfig, {
     }
   },
   plugins: [
-    new VueLoaderPlugin(),
     new MiniCssExtractPlugin(),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({

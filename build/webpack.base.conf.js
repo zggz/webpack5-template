@@ -4,7 +4,6 @@ import path from 'node:path';
 import chalk from 'chalk'
 import * as utils from './utils.js'
 import config from '../config/index.js'
-import vueLoaderConfig from './vue-loader.conf.js'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import { fileURLToPath } from 'node:url';
 
@@ -28,7 +27,7 @@ function resolve(dir) {
 export default {
   context: path.resolve(__dirname, '../'),
   entry: {
-    app: './src/main.js'
+    app: './src/index.tsx'
   },
   output: {
     path: config.build.assetsRoot,
@@ -38,27 +37,24 @@ export default {
       : config.dev.assetsPublicPath
   },
   resolve: {
-     extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json'] ,
+     extensions: ['.wasm', '.mjs', '.js', '.jsx','.tsx', '.json'] ,
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
     }
   },
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        use: {
-          loader: 'vue-loader',
-          options: vueLoaderConfig
-        }
-      },
-      {
-        test: /\.js$/,
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
         use: {
           loader: 'babel-loader',
+          options: {
+            cacheDirectory: true
+          },
         },
-        include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
+        exclude: /(node_modules)/,
+        include: [resolve('src')],
+        
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

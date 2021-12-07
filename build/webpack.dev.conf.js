@@ -11,7 +11,6 @@ import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
 import ESLintPlugin from 'eslint-webpack-plugin'
 import portfinder from 'portfinder'
-import { VueLoaderPlugin } from 'vue-loader'
 import devConfigEnv from '../config/dev.env.js'
 
 import { fileURLToPath } from 'node:url';
@@ -22,7 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
-const devWebpackConfig = merge(baseWebpackConfig, {
+export default merge(baseWebpackConfig, {
   mode: 'development',
   module: {
     rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -53,7 +52,6 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     proxy: config.dev.proxyTable,
   },
   plugins: [
-    new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       'process.env': devConfigEnv
     }),
@@ -83,38 +81,38 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   ]
 })
 
-export default new Promise((resolve, reject) => {
-  portfinder.basePort = process.env.PORT || config.dev.port
-  portfinder.getPort((err, port) => {
-    if (err) {
-      reject(err)
-    } else {
-      // publish the new Port, necessary for e2e tests
-      process.env.PORT = port
-      // add port to devServer config
-      devWebpackConfig.devServer.port = port
+// export default new Promise((resolve, reject) => {
+//   portfinder.basePort = process.env.PORT || config.dev.port
+//   portfinder.getPort((err, port) => {
+//     if (err) {
+//       reject(err)
+//     } else {
+//       // publish the new Port, necessary for e2e tests
+//       process.env.PORT = port
+//       // add port to devServer config
+//       devWebpackConfig.devServer.port = port
 
-      // Add FriendlyErrorsPlugin
-      // devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
-      //   compilationSuccessInfo: {
-      //     messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
-      //   },
-      //   onErrors: config.dev.notifyOnErrors
-      //     ? utils.createNotifierCallback()
-      //     : undefined
-      // }))
-      if (config.dev.useEslint) {
-        devWebpackConfig.plugins.push(
-          new ESLintPlugin({
-            fix: true, // 启用ESLint自动修复功能
-            extensions: ['js', 'jsx'],
-            context: path.resolve(__dirname, '../src'), // 文件根目录
-            exclude: '/node_modules/',// 指定要排除的文件/目录
-            cache: true //缓存
-          })
-        )
-      }
-      resolve(devWebpackConfig)
-    }
-  })
-})
+//       // Add FriendlyErrorsPlugin
+//       // devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
+//       //   compilationSuccessInfo: {
+//       //     messages: [`Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`],
+//       //   },
+//       //   onErrors: config.dev.notifyOnErrors
+//       //     ? utils.createNotifierCallback()
+//       //     : undefined
+//       // }))
+//       if (config.dev.useEslint) {
+//         devWebpackConfig.plugins.push(
+//           new ESLintPlugin({
+//             fix: true, // 启用ESLint自动修复功能
+//             extensions: ['js', 'jsx'],
+//             context: path.resolve(__dirname, '../src'), // 文件根目录
+//             exclude: '/node_modules/',// 指定要排除的文件/目录
+//             cache: true //缓存
+//           })
+//         )
+//       }
+//       resolve(devWebpackConfig)
+//     }
+//   })
+// })
