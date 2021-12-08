@@ -1,10 +1,10 @@
 'use strict'
 import path from 'node:path';
 
-import chalk from 'chalk'
-import * as utils from './utils.js'
+import * as utils from './loader.js'
 import config from '../config/index.js'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import { fileURLToPath } from 'node:url';
 
 
@@ -91,11 +91,23 @@ export default {
       }
     ]
   },
-  plugins: [
-    new ProgressBarPlugin({
-      format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
-    })
-  ],
+  // plugins: [
+  //   new ProgressBarPlugin({
+  //     format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
+  //   }),
+  //   config.useTypeScript &&
+  //   new ForkTsCheckerWebpackPlugin({
+  //     typescript: {
+  //       mode: 'write-references',
+  //       typescriptPath: resolve.sync('typescript')
+  //     },
+  //     eslint: {
+  //       files: './src/**/*.{ts,tsx,js,jsx}'
+  //     },
+  //     async: isEnvDevelopment
+  //     // formatter: isEnvProduction ? typescriptFormatter : undefined
+  //   }),
+  // ].filter(Boolean),
   node: {
     // prevent webpack from injecting mocks to Node native modules
     // that does not make sense for the client

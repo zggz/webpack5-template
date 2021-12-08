@@ -11,10 +11,27 @@
     ]
   ],
   "plugins": [
+    "react-refresh/babel",
+    [
+      "@babel/plugin-transform-react-jsx",
+      {
+        "runtime": "automatic"
+      }
+    ],
     [
       "@babel/plugin-proposal-class-properties",
       {
         "loose": true
+      }
+    ],
+    [
+      "babel-plugin-named-asset-import",
+      {
+        "loaderMap":{
+            "svg":{
+              "ReactComponent": "@svgr/webpack?-svgo,+titleProp,+ref![path]"
+            }
+        }
       }
     ]
   ]

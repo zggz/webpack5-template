@@ -1,16 +1,20 @@
 'use strict'
-import * as utils from './utils.js'
+import * as utils from './loader.js'
 import webpack from 'webpack'
 import config from '../config/index.js'
 import { merge } from 'webpack-merge'
 import path from 'path'
+import chalk from 'chalk'
+
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import baseWebpackConfig from './webpack.base.conf.js'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import FriendlyErrorsPlugin from 'friendly-errors-webpack-plugin'
+import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import ESLintPlugin from 'eslint-webpack-plugin'
-import portfinder from 'portfinder'
 import devConfigEnv from '../config/dev.env.js'
 
 import { fileURLToPath } from 'node:url';
@@ -77,8 +81,44 @@ export default merge(baseWebpackConfig, {
           }
         }
       ]
-    })
-  ]
+    }),
+    new ProgressBarPlugin({
+      format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
+    }),
+    config.dev.useTypeScript &&
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        mode: 'write-references',
+      },
+      eslint: {
+        files: './src/**/*.{ts,tsx,js,jsx}'
+      },
+      async: true
+      // formatter: isEnvProduction ? typescriptFormatter : undefined
+    }),
+    new ReactRefreshWebpackPlugin(),
+    new FriendlyErrorsPlugin({
+      compilationSuccessInfo: {
+        messages: [`Your application is running here: ${config.dev.https ? 'https' : 'http'}://${config.dev.host}:${config.dev.port}`],
+      },
+      onErrors: config.dev.notifyOnErrors
+        ? utils.createNotifierCallback()
+        : undefined,
+      clearConsole: true,
+    }),
+    config.dev.useEslint && new ESLintPlugin({
+            fix: true, // 启用ESLint自动修复功能
+            extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
+            context: path.resolve(__dirname, '../src'), // 文件根目录
+            exclude: ['/node_modules/', '/test/'],// 指定要排除的文件/目录
+            cache: true, //缓存
+      cacheLocation: path.resolve(__dirname,
+               "../node_moudles",
+               '.cache/.eslintcache'
+             ),
+          })
+  ].filter(Boolean),
+  
 })
 
 // export default new Promise((resolve, reject) => {
