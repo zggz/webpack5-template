@@ -154,7 +154,6 @@ export function createCompiler({
       printInstructions(appName, urls, useYarn);
     }
     isFirstCompile = false;
-
     // If errors exist, only show errors.
     if (messages.errors.length) {
       // Only keep the first error. Others are often indicative
@@ -166,7 +165,7 @@ export function createCompiler({
       console.log(messages.errors.join('\n\n'));
       return;
     }
-
+  
     // Show warnings if no errors were found.
     if (messages.warnings.length) {
       console.log(chalk.yellow('Compiled with warnings.\n'));

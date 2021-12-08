@@ -4,15 +4,18 @@ import path from 'node:path';
 import * as utils from './loader.js'
 import config from '../config/index.js'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
+import chalk from 'chalk'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import { fileURLToPath } from 'node:url';
-
+import StylelintPlugin from 'stylelint-webpack-plugin'
+import fs from 'fs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 
+console.log(fs.realpathSync(process.cwd()), 'fs.realpathSync(process.cwd());');
 // const createLintingRule = () => ({
 //   test: /\.(js|vue)$/,
 //   loader: 'eslint-loader',
@@ -49,12 +52,15 @@ export default {
         use: {
           loader: 'babel-loader',
           options: {
-            cacheDirectory: true
+            cacheDirectory: true,
+            plugins: [
+              process.env.NODE_ENV === 'development' &&
+              require.resolve('react-refresh/babel')
+            ].filter(Boolean)
           },
         },
         exclude: /(node_modules)/,
-        include: [resolve('src')],
-        
+        include: [resolve('src')],  
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -91,23 +97,12 @@ export default {
       }
     ]
   },
-  // plugins: [
-  //   new ProgressBarPlugin({
-  //     format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
-  //   }),
-  //   config.useTypeScript &&
-  //   new ForkTsCheckerWebpackPlugin({
-  //     typescript: {
-  //       mode: 'write-references',
-  //       typescriptPath: resolve.sync('typescript')
-  //     },
-  //     eslint: {
-  //       files: './src/**/*.{ts,tsx,js,jsx}'
-  //     },
-  //     async: isEnvDevelopment
-  //     // formatter: isEnvProduction ? typescriptFormatter : undefined
-  //   }),
-  // ].filter(Boolean),
+  plugins: [
+    new ProgressBarPlugin({
+      format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
+    }),
+    new StylelintPlugin()
+  ].filter(Boolean),
   node: {
     // prevent webpack from injecting mocks to Node native modules
     // that does not make sense for the client

@@ -1,6 +1,6 @@
 'use strict'
 import path from 'path'
-import * as  utils from './utils.js'
+import * as  utils from './loader.js'
 import webpack from 'webpack'
 import config from '../config/index.js'
 import { merge } from 'webpack-merge'

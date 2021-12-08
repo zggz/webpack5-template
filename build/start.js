@@ -7,19 +7,21 @@ process.on('unhandledRejection', (err) => {
 
 import WebpackDevServer from 'webpack-dev-server'
 
+
 import chalk from 'chalk'
 
 import webpackConfig from './webpack.dev.conf.js'
+import getDevServer from './utils/devServer.js'
 import config from '../config/index.js'
 
 import { choosePort, isInteractive, clearConsole, createCompiler, prepareUrls} from './utils/index.js'
 // import paths from '../build/paths'
 // const { registerEnvs } from '../build/env')
 
-function startDevServer(webpackConfig) {
+function startDevServer(webpackConfig, serverConfig) {
 
   return new Promise((resolve, reject) => {
-    const devServerConfig = Object.assign({}, webpackConfig.devServer)
+    const devServerConfig = Object.assign({}, serverConfig)
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const { port, host: HOST } = devServerConfig
     // const compiler = webpack(webpackConfig)
@@ -30,7 +32,7 @@ function startDevServer(webpackConfig) {
       appName: 'my-project',
       urls: prepareUrls(protocol, HOST, port, config.dev.assetsPublicPath.slice(0, -1))
     })
-    const devServer = new WebpackDevServer(compiler, devServerConfig)
+    const devServer = new WebpackDevServer(devServerConfig, compiler)
 
    
     // devServer.start()
@@ -75,11 +77,12 @@ function startDevServer(webpackConfig) {
 }
 
 async function main() {
-  const PORT = process.env.PORT || webpackConfig.devServer.port
-  const HOST = process.env.HOST || webpackConfig.devServer.host
+  const devServerConfig = getDevServer(config)
+  const PORT = process.env.PORT || devServerConfig.port
+  const HOST = process.env.HOST || devServerConfig.host
   choosePort(HOST, PORT).then((port) => {
-    webpackConfig.devServer.port = port
-    startDevServer(webpackConfig)
+    devServerConfig.port = port
+    startDevServer(webpackConfig, devServerConfig)
   })
 }
 

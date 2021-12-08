@@ -1,12 +1,12 @@
 import logo from './logo.svg'
 import "./App.css"
+import "./1.scss"
 
-function App() {let a = 12
-  a =3456
+function App() {
   return (
     <div className="App">
-      {a}
       <header className="App-header">
+        <img src="//i1.mifile.cn/a1/pms_1571739438.2551201.png" alt="" />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
