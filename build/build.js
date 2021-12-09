@@ -2,8 +2,9 @@
 
 
 process.env.NODE_ENV = 'production'
-import checkVersions from './check-versions.js'
 
+import checkVersions from './check-versions.js'
+import {getEnv } from './utils/index.js'
  import   ora from 'ora'
  import   rm  from  'rimraf'
  import   path  from  'path'
@@ -12,12 +13,14 @@ import checkVersions from './check-versions.js'
  import   config  from  '../config/index.js'
  import   webpackConfig  from  './webpack.prod.conf.js'
 checkVersions()
+
+console.log(await getEnv());
 const spinner = ora('building for production...')
 spinner.start()
-
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
   if (err) throw err
-  webpack(webpackConfig, (err, stats) => {
+  const config = webpackConfig()
+  webpack(config, (err, stats) => {
     spinner.stop()
     if (err) throw err
     process.stdout.write(stats.toString({

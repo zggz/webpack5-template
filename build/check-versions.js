@@ -2,10 +2,9 @@
  import  chalk  from  'chalk'
  import  semver  from  'semver'
 import shell from 'shelljs'
+import { packageJson} from "./utils/index.js"
 import childProcess from 'child_process'
-import { promises as fs } from 'node:fs';
 
-const packageConfig = JSON.parse(await fs.readFile('package.json'));
 function exec (cmd) {
   return childProcess.execSync(cmd).toString().trim()
 }
@@ -14,7 +13,7 @@ const versionRequirements = [
   {
     name: 'node',
     currentVersion: semver.clean(process.version),
-    versionRequirement: packageConfig.engines.node
+    versionRequirement: packageJson.engines.node
   }
 ]
 
@@ -22,7 +21,7 @@ if (shell.which('npm')) {
   versionRequirements.push({
     name: 'npm',
     currentVersion: exec('npm --version'),
-    versionRequirement: packageConfig.engines.npm
+    versionRequirement: packageJson.engines.npm
   })
 }
 

@@ -34,7 +34,7 @@
     "Promise": true
   },
   "rules": {
-    "no-console": [1, { "allow": ["error"] }],
+    "no-console": "off",
     "consistent-return": 2,
     "curly": [2, "multi-or-nest"],
     "dot-location": 0,

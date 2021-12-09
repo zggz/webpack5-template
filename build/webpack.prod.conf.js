@@ -1,6 +1,8 @@
 'use strict'
 import path from 'path'
 import * as  utils from './loader.js'
+import fs from 'fs'
+import { readFile } from 'fs/promises';
 import webpack from 'webpack'
 import config from '../config/index.js'
 import { merge } from 'webpack-merge'
@@ -12,165 +14,75 @@ import CssMinimizerPlugin from "css-minimizer-webpack-plugin"
 import TerserPlugin from "terser-webpack-plugin"
 import WebpackBundleAnalyzer from 'webpack-bundle-analyzer'
 import CompressionWebpackPlugin from 'compression-webpack-plugin'
-import { fileURLToPath } from 'node:url';
+import { resolvePath } from './utils/index.js'
+const BundleAnalyzerPlugin = WebpackBundleAnalyzer.BundleAnalyzerPlugin
 
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const webpackConfig =  () => {
+  const baseConfig = baseWebpackConfig()
+  const prodConfig =   {
+    mode: 'production',
+    module: {
+      rules: utils.styleLoaders({
+        sourceMap: config.build.productionSourceMap,
+        extract: true,
+        usePostCSS: true
+      })
+    },
+    devtool: config.build.productionSourceMap ? config.build.devtool : false,
+    output: {
+      path: config.build.assetsRoot,
+      filename: utils.assetsPath('js/[name].[chunkhash].js'),
+      chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
+    },
 
-const importFresh = async modulePath => import(`${modulePath}?x=${new Date()}`);
-const env = (await importFresh(process.env.NODE_ENV === 'testing' ? '../config/test.env' : '../config/prod.env.js' )).default;
-
-const webpackConfig = merge(baseWebpackConfig, {
-  mode: 'production',
-  module: {
-    rules: utils.styleLoaders({
-      sourceMap: config.build.productionSourceMap,
-      extract: true,
-      usePostCSS: true
-    })
-  },
-  devtool: config.build.productionSourceMap ? config.build.devtool : false,
-  output: {
-    path: config.build.assetsRoot,
-    filename: utils.assetsPath('js/[name].[chunkhash].js'),
-    chunkFilename: utils.assetsPath('js/[id].[chunkhash].js')
-  },
-  optimization: {
-    minimize: true,
-    minimizer: [
-      new TerserPlugin(),
-      new CssMinimizerPlugin(),
-    ],
-    splitChunks: {
-      cacheGroups: {
-        vendors: {
-          name: 'chunk-vendors',
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10,
-          chunks: 'initial'
+    plugins: [
+      new MiniCssExtractPlugin(),
+      new MiniCssExtractPlugin({ filename: utils.assetsPath('css/[name].[contenthash].css') }),
+      new HtmlWebpackPlugin({
+        filename: process.env.NODE_ENV === 'testing'
+          ? 'index.html'
+          : config.build.index,
+        template: 'index.html',
+        inject: true,
+        minify: {
+          removeComments: true,
+          collapseWhitespace: true,
+          removeAttributeQuotes: true
         },
-        common: {
-          name: 'chunk-common',
-          minChunks: 2,
-          priority: -20,
-          chunks: 'initial',
-          reuseExistingChunk: true
-        }
-      }
-    }
-  },
-  plugins: [
-    new MiniCssExtractPlugin(),
-    // http://vuejs.github.io/vue-loader/en/workflow/production.html
-    new webpack.DefinePlugin({
-      'process.env': env
-    }),
+        chunksSortMode: 'auto'
+      }),
+      new webpack.optimize.ModuleConcatenationPlugin(),
 
-    // extract css into its own file
-    // new ExtractTextPlugin({
-    //   filename: utils.assetsPath('css/[name].[contenthash].css'),
-    //   // Setting the following option to `false` will not extract CSS from codesplit chunks.
-    //   // Their CSS will instead be inserted dynamically with style-loader when the codesplit chunk has been loaded by webpack.
-    //   // It's currently set to `true` because we are seeing that sourcemaps are included in the codesplit bundle as well when it's `false`, 
-    //   // increasing file size: https://github.com/vuejs-templates/webpack/issues/1110
-    //   allChunks: true,
-    // }),
-    new MiniCssExtractPlugin({ filename: utils.assetsPath('css/[name].[contenthash].css') }),
-    // Compress extracted CSS. We are using this plugin so that possible
-    // duplicated CSS from different components can be deduped.
-    // new OptimizeCSSPlugin({
-    //   cssProcessorOptions: config.build.productionSourceMap
-    //     ? { safe: true, map: { inline: false } }
-    //     : { safe: true }
-    // }),
-    // generate dist index.html with correct asset hash for caching.
-    // you can customize output by editing /index.html
-    // see https://github.com/ampedandwired/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      filename: process.env.NODE_ENV === 'testing'
-        ? 'index.html'
-        : config.build.index,
-      template: 'index.html',
-      inject: true,
-      minify: {
-        removeComments: true,
-        collapseWhitespace: true,
-        removeAttributeQuotes: true
-        // more options:
-        // https://github.com/kangax/html-minifier#options-quick-reference
-      },
-      // necessary to consistently work with multiple chunks via CommonsChunkPlugin
-      chunksSortMode: 'auto'
-    }),
 
-    // enable scope hoisting
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    // split vendor js into its own file
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'vendor',
-    //   minChunks (module) {
-    //     // any required modules inside node_modules are extracted to vendor
-    //     return (
-    //       module.resource &&
-    //       /\.js$/.test(module.resource) &&
-    //       module.resource.indexOf(
-    //         path.join(__dirname, '../node_modules')
-    //       ) === 0
-    //     )
-    //   }
-    // }),
-    // // extract webpack runtime and module manifest to its own file in order to
-    // // prevent vendor hash from being updated whenever app bundle is updated
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'manifest',
-    //   minChunks: Infinity
-    // }),
-    // // This instance extracts shared chunks from code splitted chunks and bundles them
-    // // in a separate chunk, similar to the vendor chunk
-    // // see: https://webpack.js.org/plugins/commons-chunk-plugin/#extra-async-commons-chunk
-    // new webpack.optimize.CommonsChunkPlugin({
-    //   name: 'app',
-    //   async: 'vendor-async',
-    //   children: true,
-    //   minChunks: 3
-    // }),
-
-    // copy custom static assets
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: path.resolve(__dirname, '../static'),
-          to: config.dev.assetsSubDirectory,
-          globOptions: {
-            ignore: ['.*']
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: resolvePath('static'),
+            to: config.dev.assetsSubDirectory,
+            globOptions: {
+              ignore: ['.*']
+            }
           }
-        }
-      ]
-    }),
-   
-  ]
-})
+        ]
+      }),
+      config.build.productionGzip && new CompressionWebpackPlugin({
+        // asset: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: new RegExp(
+          '\\.(' +
+          config.build.productionGzipExtensions.join('|') +
+          ')$'
+        ),
+        threshold: 10240,
+        minRatio: 0.8,
+        deleteOriginalAssets: true,
+      }),
+      config.build.productionGzip && new BundleAnalyzerPlugin()
+    ].filter(Boolean)
+  }
 
-if (config.build.productionGzip) {
-
-  webpackConfig.plugins.push(
-    new CompressionWebpackPlugin({
-      // asset: '[path].gz[query]',
-      algorithm: 'gzip',
-      test: new RegExp(
-        '\\.(' +
-        config.build.productionGzipExtensions.join('|') +
-        ')$'
-      ),
-      threshold: 10240,
-      minRatio: 0.8,
-      deleteOriginalAssets: true,
-    })
-  )
-}
-if (config.build.bundleAnalyzerReport) {
-  const BundleAnalyzerPlugin = WebpackBundleAnalyzer.BundleAnalyzerPlugin
-  webpackConfig.plugins.push(new BundleAnalyzerPlugin())
+  return merge(baseConfig, prodConfig)
 }
 
 export default webpackConfig

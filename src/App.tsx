@@ -1,23 +1,28 @@
-import logo from './logo.svg'
+import logo from "./logo.svg"
 import "./App.css"
 import "./1.scss"
-
+import { print } from "./utils"
+import Skeleton from "react-loading-skeleton"
+import "react-loading-skeleton/dist/skeleton.css"
 function App() {
+  print()
   return (
     <div className="App">
+      <Skeleton />
+      <Skeleton count={5} />
       <header className="App-header">
-        <img src="//i1.mifile.cn/a1/pms_1571739438.2551201.png" alt="" />
+        <img
+            src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/b3d1c941b152d5d41042f9c1e1b7509a.jpg?w=2452&h=920"
+            alt=""
+        />
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
         <a
             className="App-link"
             href="https://reactjs.org"
             target="_blank"
             rel="noopener noreferrer"
         >
-          Learn Reactv 12 14 16 19 20 21 34
+          Learn React 12 14 15 16 17 18
         </a>
       </header>
     </div>
