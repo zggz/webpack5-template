@@ -18,8 +18,8 @@ import { resolvePath } from './utils/index.js'
 const BundleAnalyzerPlugin = WebpackBundleAnalyzer.BundleAnalyzerPlugin
 
 
-const webpackConfig =  () => {
-  const baseConfig = baseWebpackConfig()
+const webpackConfig = async () => {
+  const baseConfig =await baseWebpackConfig()
   const prodConfig =   {
     mode: 'production',
     module: {

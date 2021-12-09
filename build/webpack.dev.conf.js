@@ -14,7 +14,6 @@ import { resolvePath } from './utils/index.js'
 
 
 const baseConfig =  await baseWebpackConfig()
-console.log(config);
 export default merge(baseConfig, {
   mode: 'development',
   module: {

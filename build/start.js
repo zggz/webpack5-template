@@ -1,6 +1,6 @@
 process.env.BABEL_ENV = 'development'
 process.env.NODE_ENV = 'development'
-
+console.log(process.argv);
 process.on('unhandledRejection', (err) => {
   throw err
 })
@@ -39,9 +39,7 @@ function startDevServer(webpackConfig, serverConfig) {
           clearConsole()
         }
         console.log(chalk.cyan('Starting the development server...\n'))
-        setTimeout(() => {
           printInstructions('my-pro', protocol, host, port, config.dev.useYarn )
-        }, 1000);
       };
 
       const stopServer = async () => {

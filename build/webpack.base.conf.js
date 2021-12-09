@@ -11,7 +11,7 @@ import CssMinimizerPlugin from "css-minimizer-webpack-plugin"
 import TerserPlugin from "terser-webpack-plugin"
 
 
-import { resolvePath, getEnv} from './utils/index.js'
+import { resolvePath, getEnv } from './utils/index.js'
 
 
 
@@ -20,23 +20,23 @@ import { resolvePath, getEnv} from './utils/index.js'
 const webpackBaseConfig = async () => {
   return {
     target: process.env.NODE_ENV === "development" ? "web" : "browserslist",
-      context: resolvePath(),
-        entry: {
+    context: resolvePath(),
+    entry: {
       app: './src/index.tsx'
     },
     output: {
       path: config.build.assetsRoot,
-        filename: '[name].js',
-          publicPath: process.env.NODE_ENV === 'production'
-            ? config.build.assetsPublicPath
-            : config.dev.assetsPublicPath
+      filename: '[name].js',
+      publicPath: process.env.NODE_ENV === 'production'
+        ? config.build.assetsPublicPath
+        : config.dev.assetsPublicPath
     },
     resolve: {
       // fix: Field 'browser' doesn't contain a valid alias configuration
       extensions: ['.wasm', '.mjs', '.js', '.jsx', '.tsx', '.ts', '.json'],
-        alias: {
+      alias: {
         '@': resolvePath('src'),
-    }
+      }
     },
     module: {
       rules: [
@@ -92,33 +92,33 @@ const webpackBaseConfig = async () => {
     },
     optimization: {
       minimize: true,
-        runtimeChunk: 'single',
-          moduleIds: 'deterministic',
-            minimizer: [
-              new TerserPlugin(),
-              new CssMinimizerPlugin(),
-            ],
-              splitChunks: {
+      runtimeChunk: 'single',
+      moduleIds: 'deterministic',
+      minimizer: [
+        new TerserPlugin(),
+        new CssMinimizerPlugin(),
+      ],
+      splitChunks: {
         cacheGroups: {
           vendors: {
             name: 'chunk-vendors',
-              test: /[\\/]node_modules[\\/]/,
-                priority: -10,
-                  chunks: 'initial'
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            chunks: 'initial'
           },
           common: {
             name: 'chunk-common',
-              minChunks: 2,
-                priority: -20,
-                  chunks: 'initial',
-                    reuseExistingChunk: true
+            minChunks: 2,
+            priority: -20,
+            chunks: 'initial',
+            reuseExistingChunk: true
           }
         }
       }
     },
     plugins: [
       new webpack.DefinePlugin(Object.assign(await getEnv(process.env.NODE_ENV), {
-        'process.env':{}
+        'process.env': {}
       })),
       new ProgressBarPlugin({
         format: `  :msg [:bar] ${chalk.green.bold(':percent')} (:elapsed s)`
@@ -136,13 +136,13 @@ const webpackBaseConfig = async () => {
         // formatter: isEnvProduction ? typescriptFormatter : undefined
       }),
     ].filter(Boolean),
-      node: {
+    node: {
       // prevent webpack from injecting mocks to Node native modules
       // that does not make sense for the client
       global: false,
-        __filename: false,
-          __dirname: false,
-  },
+      __filename: false,
+      __dirname: false,
+    },
     // cache: {
     //   // 将缓存类型设置为文件系统      
     //   type: "filesystem",

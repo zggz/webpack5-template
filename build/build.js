@@ -1,6 +1,7 @@
 'use strict'
 
 
+
 process.env.NODE_ENV = 'production'
 
 import checkVersions from './check-versions.js'
@@ -17,9 +18,9 @@ checkVersions()
 console.log(await getEnv());
 const spinner = ora('building for production...')
 spinner.start()
-rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
+rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), async err => {
   if (err) throw err
-  const config = webpackConfig()
+  const config = await webpackConfig()
   webpack(config, (err, stats) => {
     spinner.stop()
     if (err) throw err
