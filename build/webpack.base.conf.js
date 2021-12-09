@@ -16,16 +16,6 @@ function resolve(dir) {
 }
 
 console.log(fs.realpathSync(process.cwd()), 'fs.realpathSync(process.cwd());');
-// const createLintingRule = () => ({
-//   test: /\.(js|vue)$/,
-//   loader: 'eslint-loader',
-//   enforce: 'pre',
-//   include: [resolve('src'), resolve('test')],
-//   options: {
-//     formatter: require('eslint-friendly-formatter'),
-//     emitWarning: !config.dev.showEslintErrorsInOverlay
-//   }
-// })
 
 export default {
   context: path.resolve(__dirname, '../'),
