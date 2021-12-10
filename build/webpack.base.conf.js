@@ -1,7 +1,6 @@
 'use strict'
 import webpack from 'webpack'
 
-import * as utils from './styleLoaders.js'
 import AppConfig from './config.js'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
@@ -23,6 +22,8 @@ const BundleAnalyzerPlugin = WebpackBundleAnalyzer.BundleAnalyzerPlugin
 
 import { resolvePath, getEnv } from './utils/index.js'
 import { styleLoaders, assetsPath} from './styleLoaders.js'
+
+
 
 
 
@@ -66,6 +67,7 @@ const webpackBaseConfig = async () => {
             }),
             {
               test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+              // type: 'asset',
               use: {
                 loader: 'url-loader',
                 options: {
@@ -88,6 +90,7 @@ const webpackBaseConfig = async () => {
             },
             {
               test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+              // type: 'asset/resource',
               use: {
                 loader: 'url-loader',
                 options: {
@@ -216,7 +219,7 @@ const webpackBaseConfig = async () => {
       }),
       AppConfig.bundleAnalyzerReport && new BundleAnalyzerPlugin(),
       isEnvProduction && new webpack.optimize.ModuleConcatenationPlugin(),
-      new ErrorOverlayPlugin()
+      // new ErrorOverlayPlugin()
     ].filter(Boolean),
     node: {
       // prevent webpack from injecting mocks to Node native modules
@@ -225,21 +228,10 @@ const webpackBaseConfig = async () => {
       __filename: false,
       __dirname: false,
     },
-    // cache: {
-    //   // 将缓存类型设置为文件系统
-    //   type: "filesystem",
-    //   buildDependencies: {
-    //     /* 将你的 scripts 添加为 buildDependency，
-    //        以便在改变 scripts 时获得缓存无效*/
-    //     scripts: [__filename],
-    //     /* 如果有其他的东西被构建依赖，
-    //        你可以在这里添加它们*/
-    //     /* 注意，webpack.scripts，
-    //        加载器和所有从你的配置中引用的模块都会被自动添加*/
-    //   },
-    //   // 指定缓存的版本
-    //   version: '1.0'
-    // }
+    cache: {
+      // 将缓存类型设置为文件系统
+      type: "filesystem"
+    }
   }
 }
 

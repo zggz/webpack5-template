@@ -27,6 +27,9 @@
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "node": {
+        "extensions": [".tsx", ".jsx", ".ts", ".js"]
     }
   },
   "ignorePatterns": ["test/**/*.test.*", "src/**/*.test.tsx", "src/**/*.d.ts"],
