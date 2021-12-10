@@ -1,16 +1,33 @@
 {
   "presets": [
     "@babel/preset-typescript",
-    "@babel/preset-env",
     "@babel/preset-react",
     [
       "babel-preset-react-app",
       {
         "runtime": "automatic"
       }
+    ],
+    [
+      "@babel/preset-env", //基础预设
+      {
+        "useBuiltIns": "usage", // 按需加载
+        "corejs": {
+          "version": 3
+        },
+        "targets": {
+          // 兼容到什么版本到浏览器
+          "chrome": "60",
+          "firefox": "50",
+          "ie": "9",
+          "safari": "10",
+          "edge": "17"
+        }
+      }
     ]
   ],
   "plugins": [
+    "@babel/plugin-syntax-dynamic-import",
     [
       "@babel/plugin-transform-react-jsx",
       {
@@ -18,18 +35,12 @@
       }
     ],
     [
-      "@babel/plugin-proposal-class-properties",
-      {
-        "loose": true
-      }
-    ],
-    [
       "babel-plugin-named-asset-import",
       {
-        "loaderMap":{
-            "svg":{
-              "ReactComponent": "@svgr/webpack?-svgo,+titleProp,+ref![path]"
-            }
+        "loaderMap": {
+          "svg": {
+            "ReactComponent": "@svgr/webpack?-svgo,+titleProp,+ref![path]"
+          }
         }
       }
     ]

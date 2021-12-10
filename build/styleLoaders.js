@@ -2,11 +2,7 @@
 import path from 'path'
 import config from './config.js'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
-import notifier from 'node-notifier'
-import { promises as fs } from 'node:fs';
 
-const packageConfig = JSON.parse(await fs.readFile('package.json'));
-import { fileURLToPath } from 'node:url';
 
 
 export const assetsPath = function (_path) {
@@ -25,9 +21,9 @@ export const cssLoaders = function (options) {
 
   const postcssLoader = {
     loader: 'postcss-loader',
-    // options: {
-    //   sourceMap: options.sourceMap
-    // }
+    options: {
+      sourceMap: options.sourceMap
+    }
   }
 
 
@@ -82,4 +78,3 @@ export const styleLoaders = function (options) {
   }
   return output
 }
-

@@ -16,10 +16,10 @@ checkVersions()
 
 const spinner = ora('building for production...')
 spinner.start()
-rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), async err => {
+rm(path.join(config.assetsRoot, config.assetsSubDirectory), async err => {
   if (err) throw err
-  const config = await webpackBaseConfig()
-  webpack(config, (err, stats) => {
+  const webpackConfig = await webpackBaseConfig()
+  webpack(webpackConfig, (err, stats) => {
     spinner.stop()
     if (err) throw err
     process.stdout.write(stats.toString({

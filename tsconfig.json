@@ -22,7 +22,9 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "build/loader.js"],
+  "include": ["src",
+    "build/styleLoaders.js"
+  ],
   "exclude": ["node_modules", "dist", "build", "script",
     "scripts"
   ]

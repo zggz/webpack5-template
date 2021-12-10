@@ -7,12 +7,15 @@ export default {
   autoOpenBrowser: true,
   errorOverlay: true,
   notifyOnErrors: true,
-  useEslint: true,
+  
   useTypeScript: true,
   useYarn: true,
   devtool: 'eval-source-map',
   cssSourceMap: true,
   allowedHosts: [],
+
+  useEslint: true,
+  autoEslintFix: false,
 
   // 静态目录
   assetsSubDirectory: 'static',
