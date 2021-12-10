@@ -6,13 +6,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node build/start.js mode=development HOST='0.0.0.0' PORT='8090'",
+    "dev": "node scripts/start.js mode=development HOST='0.0.0.0' PORT='8090'",
     "start": "npm run dev",
     "unit": "jest --config test/unit/jest.conf.js --coverage",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node  build/build.js mode=production HOST='0.0.0.0' PORT='8090'"
+    "build": "node  scripts/build.js mode=production HOST='0.0.0.0' PORT='8090'"
   },
   "dependencies": {
     "eslint-config-react-app": "^6.0.0",

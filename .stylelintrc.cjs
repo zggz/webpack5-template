@@ -5,7 +5,7 @@ module.exports = {
     "customSyntax": "postcss-safe-parser"
   }],
   "extends": [
-    "stylelint-config-standard"
+    "stylelint-scripts-standard"
   ],
   "plugins": [
     "stylelint-order"

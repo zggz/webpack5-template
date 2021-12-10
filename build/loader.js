@@ -1,6 +1,6 @@
 'use strict'
 import path from 'path'
-import config from '../config/index.js'
+import config from './config.js'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
 import notifier from 'node-notifier'
 import { promises as fs } from 'node:fs';

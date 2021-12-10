@@ -1,4 +1,4 @@
-import { resolvePath } from "../build/utils/index.js";
+import { resolvePath } from "./utils/index.js";
 
 export default {
 

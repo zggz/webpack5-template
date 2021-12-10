@@ -23,5 +23,7 @@
     "jsx": "react-jsx"
   },
   "include": ["src", "build/loader.js"],
-  "exclude": ["node_modules", "dist", "build", "script", "config"]
+  "exclude": ["node_modules", "dist", "build", "script",
+    "scripts"
+  ]
 }

@@ -2,7 +2,7 @@
 import webpack from 'webpack'
 
 import * as utils from './loader.js'
-import CONFIG from '../config/index.js'
+import CONFIG from './config.js'
 import ProgressBarPlugin from 'progress-bar-webpack-plugin'
 import chalk from 'chalk'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
@@ -212,18 +212,18 @@ const webpackBaseConfig = async () => {
       __dirname: false,
     },
     // cache: {
-    //   // 将缓存类型设置为文件系统      
+    //   // 将缓存类型设置为文件系统
     //   type: "filesystem",
     //   buildDependencies: {
-    //     /* 将你的 config 添加为 buildDependency，           
-    //        以便在改变 config 时获得缓存无效*/
-    //     config: [__filename],
-    //     /* 如果有其他的东西被构建依赖，           
+    //     /* 将你的 scripts 添加为 buildDependency，
+    //        以便在改变 scripts 时获得缓存无效*/
+    //     scripts: [__filename],
+    //     /* 如果有其他的东西被构建依赖，
     //        你可以在这里添加它们*/
-    //     /* 注意，webpack.config，           
+    //     /* 注意，webpack.scripts，
     //        加载器和所有从你的配置中引用的模块都会被自动添加*/
     //   },
-    //   // 指定缓存的版本      
+    //   // 指定缓存的版本
     //   version: '1.0'
     // }
   }

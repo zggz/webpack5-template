@@ -4,14 +4,14 @@
 process.env.BABEL_ENV = 'production'
 process.env.NODE_ENV = 'production'
 
-import checkVersions from './utils/check-versions.js'
+import checkVersions from '../build/utils/check-versions.js'
  import   ora from 'ora'
  import   rm  from  'rimraf'
  import   path  from  'path'
  import   chalk  from  'chalk'
  import   webpack  from  'webpack'
- import   config  from  '../config/index.js'
-import webpackBaseConfig  from  './webpack.base.conf.js'
+ import   config  from '../build/config.js'
+import webpackBaseConfig  from '../build/webpack.base.conf.js'
 checkVersions()
 
 const spinner = ora('building for production...')
