@@ -7,7 +7,14 @@ import { readFile } from 'fs/promises';
 
 export { choosePort, isInteractive, clearConsole } from './choosePort.js'
 
-export { printInstructions } from './print.js'
+export { printInstructions } from './printInstructions.js'
+export const transformArrayToObject = (arr, regexp = new RegExp()) => arr.reduce((a, b) => {
+  if (b.includes('=') && regexp.test(b)) {
+    let line = b.split('=')
+    a[`${line[0].trim()}`] = JSON.stringify(line[1].trim())
+  }
+  return a
+}, {})
 
 /**
  * 项目根目录
@@ -21,26 +28,27 @@ export const packageJson = JSON.parse(await readFile(new URL(resolvePath('packag
 export const getEnv = async (filename) => {
   const REACT_APP = /^REACT_APP_/i;
   let env;
-  let lines;
   try {
     env = await readFile(new URL(resolvePath(`env/.env.${filename}`), import.meta.url), { encoding: 'utf-8' })
   } catch (error) {
     env = await readFile(new URL(resolvePath(`env/.env.local`), import.meta.url), { encoding: 'utf-8' })
   }
-  lines = env.split(/\r?\n/).map(line => line.split('='))
-  return lines.reduce((a, b) => {
-    if (b.length === 2 && REACT_APP.test(b[0])) {
-      a[`process.env.${b[0].trim()}`] = JSON.stringify(b[1].trim())
-    }
-    return a
-  }, {})
+
+  return transformArrayToObject(env.split(/\r?\n/), REACT_APP )
 }
 
 
-// [
-//   ['NODE_ENV ', ' development'],
-//   ['DEPLOY_ENV ', ' local'],
-//   ['sourceMap ', ' source-map'],
-//   ['']
-// ]
+/**
+ * 注入命令行工具
+ */
+export const initArguments = () => {
+  process.argv.slice(2).reduce((a, b) => {
+    if (b.includes('=')) {
+      let line = b.split('=')
+      a[`${line[0].trim()}`] = line[1].trim()
+    }
+    return a
+  }, process.env)
+}
+
 

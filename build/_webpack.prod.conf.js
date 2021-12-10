@@ -1,6 +1,6 @@
 'use strict'
 import path from 'path'
-import * as  utils from './loader.js'
+import * as  utils from '../config/loader.js/index.js.js'
 import fs from 'fs'
 import { readFile } from 'fs/promises';
 import webpack from 'webpack'
@@ -52,7 +52,7 @@ const webpackConfig = async () => {
         },
         chunksSortMode: 'auto'
       }),
-      new webpack.optimize.ModuleConcatenationPlugin(),
+     
 
 
       new CopyWebpackPlugin({

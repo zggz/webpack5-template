@@ -1,4 +1,4 @@
-import logo from "./logo.svg"
+import logo from "../static/logo.svg"
 import "./App.css"
 import "./1.scss"
 import { print } from "./utils"

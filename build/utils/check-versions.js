@@ -2,7 +2,7 @@
  import  chalk  from  'chalk'
  import  semver  from  'semver'
 import shell from 'shelljs'
-import { packageJson} from "./utils/index.js"
+import { packageJson} from "./index.js"
 import childProcess from 'child_process'
 
 function exec (cmd) {

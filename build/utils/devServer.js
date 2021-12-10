@@ -6,22 +6,22 @@ const getDevServer = function (config) {
   return {
     client: {
       logging: 'info',
-      overlay: config.dev.errorOverlay
+      overlay: config.errorOverlay
         ? { warnings: false, errors: true }
         : false,
       progress: true,
     },
     compress: true,
-    allowedHosts: config.dev.allowedHosts.length > 1 ? config.dev.allowedHosts : 'all',
+    allowedHosts: config.allowedHosts.length > 1 ? config.allowedHosts : 'all',
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') },
+        { from: /.*/, to: path.posix.join(config.assetsPublicPath, 'index.html') },
       ],
     },
-    host: HOST || config.dev.host,
-    port: PORT || config.dev.port,
-    open: config.dev.autoOpenBrowser,
-    proxy: config.dev.proxyTable,
+    host: HOST || config.host,
+    port: PORT || config.port,
+    open: config.autoOpenBrowser,
+    proxy: config.proxyTable || {},
     onListening: function (devServer) {
       if (!devServer) {
         throw new Error('webpack-dev-server is not defined');

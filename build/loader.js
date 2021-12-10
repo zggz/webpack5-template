@@ -9,12 +9,8 @@ const packageConfig = JSON.parse(await fs.readFile('package.json'));
 import { fileURLToPath } from 'node:url';
 
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const assetsPath = function (_path) {
-  const assetsSubDirectory = process.env.NODE_ENV === 'production'
-    ? config.build.assetsSubDirectory
-    : config.dev.assetsSubDirectory
-  return path.posix.join(assetsSubDirectory, _path)
+  return path.posix.join(config.assetsSubDirectory, _path)
 }
 
 export const cssLoaders = function (options) {

@@ -1,25 +1,24 @@
 process.env.BABEL_ENV = 'development'
 process.env.NODE_ENV = 'development'
-console.log(process.argv);
 process.on('unhandledRejection', (err) => {
   throw err
 })
-
+import { initArguments, packageJson } from './utils/index.js'
 import WebpackDevServer from 'webpack-dev-server'
 import webpack from 'webpack'
 
 import chalk from 'chalk'
 
-import webpackConfig from './webpack.dev.conf.js'
+import webpackBaseConfig from './webpack.base.conf.js'
 import getDevServer from './utils/devServer.js'
 import config from '../config/index.js'
 import SpeedMeasurePlugin from "speed-measure-webpack-plugin"
 
 const smp = new SpeedMeasurePlugin();
+initArguments()
+
 
 import { choosePort, isInteractive, clearConsole, printInstructions} from './utils/index.js'
-// import paths from '../build/paths'
-// const { registerEnvs } from '../build/env')
 
 function startDevServer(webpackConfig, serverConfig) {
 
@@ -27,8 +26,9 @@ function startDevServer(webpackConfig, serverConfig) {
     const devServerConfig = Object.assign({}, serverConfig)
     const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     const { port, host } = devServerConfig
+    console.log(devServerConfig);
     try {
-    const  compiler = webpack(webpackConfig);
+      const  compiler = webpack(webpackConfig);
       const devServer = new WebpackDevServer(devServerConfig, compiler)
 
       const runServer = async () => {
@@ -39,7 +39,7 @@ function startDevServer(webpackConfig, serverConfig) {
           clearConsole()
         }
         console.log(chalk.cyan('Starting the development server...\n'))
-          printInstructions('my-pro', protocol, host, port, config.dev.useYarn )
+        printInstructions(packageJson.name, protocol, host, port, config.useYarn )
       };
 
       const stopServer = async () => {
@@ -59,9 +59,12 @@ function startDevServer(webpackConfig, serverConfig) {
 }
 
 async function main() {
+ 
   const devServerConfig = getDevServer(config)
+  const webpackConfig = await webpackBaseConfig()
   choosePort(devServerConfig.host, devServerConfig.port).then((port) => {
-    devServerConfig.port = port
+    console.log(process.env.PORT, parseInt("8090"));
+    devServerConfig.port = Number(process.env.PORT)
     startDevServer(webpackConfig, devServerConfig)
   })
 }

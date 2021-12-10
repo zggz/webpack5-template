@@ -1,26 +1,24 @@
 'use strict'
 
 
-
+process.env.BABEL_ENV = 'production'
 process.env.NODE_ENV = 'production'
 
-import checkVersions from './check-versions.js'
-import {getEnv } from './utils/index.js'
+import checkVersions from './utils/check-versions.js'
  import   ora from 'ora'
  import   rm  from  'rimraf'
  import   path  from  'path'
  import   chalk  from  'chalk'
  import   webpack  from  'webpack'
  import   config  from  '../config/index.js'
- import   webpackConfig  from  './webpack.prod.conf.js'
+import webpackBaseConfig  from  './webpack.base.conf.js'
 checkVersions()
 
-console.log(await getEnv());
 const spinner = ora('building for production...')
 spinner.start()
 rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), async err => {
   if (err) throw err
-  const config = await webpackConfig()
+  const config = await webpackBaseConfig()
   webpack(config, (err, stats) => {
     spinner.stop()
     if (err) throw err
